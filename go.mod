@@ -2,7 +2,7 @@ module app
 
 go 1.22.6
 
-require github.com/a-h/templ v0.2.771
+require github.com/a-h/templ v0.2.793
 
 require (
 	gorm.io/driver/postgres v1.5.9

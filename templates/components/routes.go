@@ -1,8 +1,6 @@
 package components
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/a-h/templ"
@@ -13,12 +11,6 @@ type State struct {
 }
 
 func Routes() {
-	err := InitDB()
-	if err != nil {
-		log.Fatalf("Failed to initialize database: %v", err)
-	} else {
-		log.Println("Database initialized")
-	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		templ.Handler(Index()).ServeHTTP(w, r)
@@ -44,16 +36,6 @@ func Routes() {
 		}
 	})
 
-	http.HandleFunc("/db", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "POST" {
-			CreateUser("Johnson", "yU3y3@example.com")
-			users, err := GetAllUsers()
-			if err != nil {
-				log.Fatalf("Failed to retrieve users: %v", err)
-			}
-			fmt.Println(users)
-		}
-	})
 	http.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		templ.Handler(ErrorPage()).ServeHTTP(w, r)
 	})
