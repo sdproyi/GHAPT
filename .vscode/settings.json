@@ -16,9 +16,6 @@
     "editor.defaultFormatter": "a-h.templ",
     "editor.foldingStrategy": "indentation"
   },
-  "files.associations": {
-  "*.templ": "folder"
-  },
   "tailwindCSS.includeLanguages": {
     "templ": "html"
   },
