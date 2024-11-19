@@ -10,4 +10,4 @@ dev:
 	$(MAKE) -j2 templ air
 
 kill:
-	bun kill-port 8080
+	fuser -k 8080/tcp
