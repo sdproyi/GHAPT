@@ -1,7 +1,6 @@
 package main
 
 import (
-	"app/templates/components"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,7 +29,6 @@ func getPort() string {
 }
 
 func main() {
-	components.Routes()
 
 	serveStaticFiles("html")
 	serveStaticFiles("font")
