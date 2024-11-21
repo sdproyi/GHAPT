@@ -1,32 +1,38 @@
 package page
 
+import . "app/Page/Tools"
+
 templ Index() {
-	<!DOCTYPE html>
-	<html class="h-full" lang="en">
-		@Head()
-		<body class="flex flex-col w-full h-full text-black md:px-5 md:pt-3 font-poppins bg-background">
-			@Body()
-		</body>
-	</html>
+<!DOCTYPE html>
+<html class="h-full" lang="en">
+@Head()
+
+<body class="flex flex-col w-full h-full text-black md:px-5 md:pt-3 font-poppins bg-background">
+	@Body()
+</body>
+
+</html>
 }
 
 templ Head() {
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<link href="/static/images/logo.svg" rel="icon "/>
-		<script src="/static/html/htmx.min.js" defer></script>
-		<script src="/static/html/alpine.min.js" defer></script>
-		<title>YourTitle</title>
-	</head>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href="/static/images/logo.svg" rel="icon " />
+	<script src="/static/html/htmx.min.js" defer></script>
+	<script src="/static/html/alpine.min.js" defer></script>
+	<title>YourTitle</title>
+</head>
 }
 
 templ Body() {
-	<div class="px-2 text-2xl grow sm:text-3xl md:text-4xl">
-		<div class="relative flex flex-col items-center justify-between h-full font-bold text-center snap-center">
-			<div class="flex flex-col items-center justify-center flex-grow pt-16 pb-16 ">
-				<h1>hello world</h1>
-			</div>
+<div class="px-2 text-2xl grow sm:text-3xl md:text-4xl">
+	<div class="relative flex flex-col items-center justify-between h-full font-bold text-center snap-center">
+		<div class="flex flex-col items-center justify-center flex-grow pt-16 pb-16 ">
+			<h1>hello world</h1>
+			@ImageOptimized(ImageOptimizedType{Src: "hi"})
 		</div>
 	</div>
+</div>
 }

@@ -31,7 +31,7 @@
   "tailwind-fold.foldedText": "class",
   "tailwind-fold.supportedLanguages": [
     "html",
-    // "templ"
+    "templ"
   ],
   "editor.formatOnSave": true,
   "editor.semanticHighlighting.enabled": true,
