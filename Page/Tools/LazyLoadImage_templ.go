@@ -8,14 +8,29 @@ package tools
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "strings"
+import (
+	"bytes"
+	"fmt"
+	"github.com/chai2010/webp"
+	"image"
+	"image/jpeg"
+	"image/png"
+	"io"
+	"io/fs"
+	"log"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"sync"
+)
 
 type Image struct {
 	Src   string
 	Error string
 }
 
-func LazyLoadImage(source Image) templ.Component {
+func LazyLoadImage(img Image) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -36,15 +51,15 @@ func LazyLoadImage(source Image) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		if IsImageFormatValid(source.Src) {
+		if IsImageFormatValid(img.Src) {
 			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("./static/images/assets/context/webp/" + imageFile(source.Src) + ".webp")
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("./static/images/assets/context/webp/" + imageFile(img.Src) + ".webp")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 13, Col: 92}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 28, Col: 116}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -55,9 +70,9 @@ func LazyLoadImage(source Image) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(source.Src)
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(img.Src)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 14, Col: 24}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 29, Col: 21}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -68,9 +83,9 @@ func LazyLoadImage(source Image) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(imageName(source.Src))
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(imageName(img.Src))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 14, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 29, Col: 48}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -126,6 +141,187 @@ func IsImageFormatValid(src string) bool {
 
 func ConvertAllImages() {
 
+}
+
+func OptimizeImages() {
+	dirPath := "./static/images/assets"
+	// Output directories
+	webpOutputDir := "./static/images/assets/context/webp"
+	jpegOutputDir := "./static/images/assets/context/jpg"
+
+	createDir(webpOutputDir)
+	createDir(jpegOutputDir)
+
+	err := processImages(dirPath, webpOutputDir, jpegOutputDir)
+	if err != nil {
+		log.Fatalf("Error processing images: %v", err)
+	}
+}
+
+func fileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return !os.IsNotExist(err)
+}
+
+func compareImages(path1, path2 string) bool {
+	file1, err1 := os.Open(path1)
+	if err1 != nil {
+		return false
+	}
+	defer file1.Close()
+
+	file2, err2 := os.Open(path2)
+	if err2 != nil {
+		return false
+	}
+	defer file2.Close()
+
+	// Read entire files
+	data1, err1 := io.ReadAll(file1)
+	data2, err2 := io.ReadAll(file2)
+
+	if err1 != nil || err2 != nil {
+		return false
+	}
+
+	return bytes.Equal(data1, data2)
+}
+
+func processImages(dirPath, webpOutputDir, jpegOutputDir string) error {
+	sem := make(chan struct{}, runtime.NumCPU())
+	var wg sync.WaitGroup
+	var processErr error
+	var mu sync.Mutex
+
+	err := filepath.WalkDir(dirPath, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Skip directories
+		if d.IsDir() {
+			// Prevent walking into context subdirectories
+			if strings.Contains(path, "/context/") {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+
+		// Check if path is directly under assets
+		relPath, err := filepath.Rel(dirPath, path)
+		if err != nil || strings.Contains(relPath, string(filepath.Separator)) {
+			return nil
+		}
+
+		ext := filepath.Ext(path)
+		if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
+			return nil
+		}
+
+		wg.Add(1)
+		sem <- struct{}{}
+
+		go func(path string) {
+			defer wg.Done()
+			defer func() { <-sem }()
+
+			file, err := os.Open(path)
+			if err != nil {
+				log.Printf("Error opening file %s: %v\n", path, err)
+				return
+			}
+			defer file.Close()
+
+			var img image.Image
+			switch ext {
+			case ".jpg", ".jpeg":
+				img, err = jpeg.Decode(file)
+			case ".png":
+				img, err = png.Decode(file)
+			case ".webp":
+				img, err = webp.Decode(file)
+			}
+
+			if err != nil {
+				log.Printf("Error decoding file %s: %v\n", path, err)
+				return
+			}
+
+			baseName := filepath.Base(path)
+			outputWebP := filepath.Join(webpOutputDir, baseName+".webp")
+			outputJPEG := filepath.Join(jpegOutputDir, baseName+".jpg")
+
+			// Check if WebP file already exists and matches
+			if !fileExists(outputWebP) || !compareImages(path, outputWebP) {
+				if err = saveAsWebP(outputWebP, img); err != nil {
+					log.Printf("Error saving WebP file %s: %v\n", outputWebP, err)
+					mu.Lock()
+					processErr = err
+					mu.Unlock()
+				}
+			}
+
+			// Check if JPEG file already exists and matches
+			if !fileExists(outputJPEG) || !compareImages(path, outputJPEG) {
+				if err = saveAsJPEG(outputJPEG, img); err != nil {
+					log.Printf("Error saving JPEG file %s: %v\n", outputJPEG, err)
+					mu.Lock()
+					processErr = err
+					mu.Unlock()
+				}
+			}
+		}(path)
+
+		return nil
+	})
+
+	wg.Wait()
+
+	if err != nil {
+		return err
+	}
+
+	return processErr
+}
+
+func createDir(dir string) {
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		err := os.MkdirAll(dir, 0755)
+		if err != nil {
+			log.Printf("Error creating directory %s: %v\n", dir, err)
+		}
+	}
+}
+
+func saveAsJPEG(path string, img image.Image) error {
+	outputFile, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("error creating JPEG file: %v", err)
+	}
+	defer outputFile.Close()
+
+	err = jpeg.Encode(outputFile, img, &jpeg.Options{Quality: 100})
+	if err != nil {
+		return fmt.Errorf("error encoding JPEG: %v", err)
+	}
+
+	return nil
+}
+
+func saveAsWebP(path string, img image.Image) error {
+	outputFile, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("error creating WebP file: %v", err)
+	}
+	defer outputFile.Close()
+
+	// Encode as WebP (lossless)
+	err = webp.Encode(outputFile, img, &webp.Options{Lossless: true})
+	if err != nil {
+		return fmt.Errorf("error encoding WebP: %v", err)
+	}
+
+	return nil
 }
 
 var _ = templruntime.GeneratedTemplate
