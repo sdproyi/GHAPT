@@ -32,7 +32,6 @@ func getPort() string {
 }
 
 func main() {
-	tools.OptimizeImages()
 	// Setup routes and static file serving
 	Routes()
 	serveStaticFiles("html")
@@ -42,9 +41,10 @@ func main() {
 
 	port := getPort()
 	fmt.Printf("Listening on %s\n", port)
-
+	
 	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
-
+	
+	tools.OptimizeImages()
 }

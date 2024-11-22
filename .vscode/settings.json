@@ -9,11 +9,15 @@
     "Fatalf",
     "gorm",
     "inputmode",
+    "proxybind",
+    "proxyp̧ort",
     "Sdpro",
     "Signin",
     "sslmode",
     "templ",
     "templruntime",
+    "testdata",
+    "tmpl",
     "Webp"
   ],
   "[templ]": {

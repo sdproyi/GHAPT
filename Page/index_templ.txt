@@ -2,5 +2,5 @@
 <body class=\"flex flex-col w-full h-full text-black md:px-5 md:pt-3 font-poppins bg-background\">
 </body></html>
 <head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link href=\"/static/images/logo.svg\" rel=\"icon \"><script src=\"/static/html/htmx.min.js\" defer></script><title>YourTitle</title></head>
-<div class=\"px-2 text-2xl grow sm:text-3xl md:text-4xl\"><div class=\"relative flex flex-col items-center justify-between h-full font-bold text-center snap-center\"><div class=\"flex flex-col items-center justify-center flex-grow pt-16 pb-16 \"><h1>hello test</h1>
+<div class=\"px-2 text-2xl grow sm:text-3xl md:text-4xl\"><div class=\"relative flex flex-col items-center justify-between h-full font-bold text-center snap-center\"><div class=\"flex flex-col items-center justify-center flex-grow pt-16 pb-16 \"><h1>hello world</h1>
 </div></div></div>

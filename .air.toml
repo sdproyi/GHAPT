@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
 args_bin = []
 bin = "./tmp/main"
-cmd = "templ generate -notify-proxy && go build -o ./tmp/main ."
+cmd = "templ generate --notify-proxy && go build -o ./tmp/main ."
 post_cmd = [""] 
 pre_cmd = []
 delay = 0
@@ -18,13 +18,13 @@ exclude_regex = ["_test.go"]
 exclude_unchanged = true
 follow_symlink = false
 full_bin = ""
-kill_delay = "0s"  
+kill_delay = 500  
 log = "build-errors.log"
-poll = false
+poll = true
 poll_interval = 0
 rerun = true
 rerun_delay = 0
-send_interrupt = false
+send_interrupt = true
 stop_on_error = false
 
 [color]
@@ -42,9 +42,9 @@ time = true
 clean_on_exit = true
 
 [proxy]
-# app_port = 8080
 enabled = true
-# proxy_port = 3000
+app_port = 8080
+proxy_port = 3000
 
 [screen]
 keep_scroll = true
