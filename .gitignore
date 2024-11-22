@@ -7,4 +7,4 @@ tmp/*
 *.jpeg
 *.jpg
 *.png
-*.txt
+*_templ.txt
