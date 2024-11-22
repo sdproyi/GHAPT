@@ -2,5 +2,9 @@ node_modules
 tmp/build-errors.log
 bin/task
 tmp/*
-templates/components/*.txt
+./Page/*_templ.txt
 .env
+*.webp
+*.jpeg
+*.jpg
+*.png
