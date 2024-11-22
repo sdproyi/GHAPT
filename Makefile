@@ -1,6 +1,6 @@
 .PHONY: templ air dev kill tailwind
 templ:
-	templ generate --watch --proxy="http://localhost:8080"
+	templ generate -watch -proxy="http://localhost:8080"
 tailwind:
 	tailwindcss -i ./tailwind.css -o ./static/style/styles.css --watch --silent
 air:

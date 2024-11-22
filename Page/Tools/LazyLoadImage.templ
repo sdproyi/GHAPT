@@ -1,0 +1,58 @@
+package tools
+
+import "strings"
+
+type Image struct {
+	Src   string
+	Error string
+}
+
+templ LazyLoadImage(source Image) {
+	if IsImageFormatValid(source.Src) {
+		<picture>
+			<source srcset={ "./static/images/assets/context/webp/" + imageFile(source.Src) + ".webp" } media=""/>
+			<img src={ source.Src } alt={ imageName(source.Src) } loading="lazy"/>
+		</picture>
+	} else {
+		<p>Add a valid image</p>
+	}
+}
+
+func imageName(imageSource string) string {
+	s := imageSource
+	lastSlash := strings.LastIndex(s, "/")
+	if lastSlash != -1 {
+		s = s[lastSlash+1:]
+	}
+	lastDot := strings.LastIndex(s, ".")
+	if lastDot != -1 {
+		s = s[:lastDot]
+	}
+	return s
+}
+
+func imageFile(imageSource string) string {
+	s := imageSource
+	lastSlash := strings.LastIndex(s, "/")
+	if lastSlash != -1 {
+		s = s[lastSlash+1:]
+	}
+	return s
+}
+
+
+func IsImageFormatValid(src string) bool {
+	if len(src) != 0 {
+		validImageFormats := []string{".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp", ".tiff"}
+		for _, ext := range validImageFormats {
+			if strings.HasSuffix(strings.ToLower(src), ext) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func ConvertAllImages(){
+
+}

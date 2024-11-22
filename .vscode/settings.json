@@ -10,7 +10,9 @@
     "Sdpro",
     "Signin",
     "sslmode",
-    "templ"
+    "templ",
+    "templruntime",
+    "Webp"
   ],
   "[templ]": {
     "editor.defaultFormatter": "a-h.templ",

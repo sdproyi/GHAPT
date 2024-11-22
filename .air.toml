@@ -5,8 +5,8 @@ tmp_dir = "tmp"
 [build]
 args_bin = []
 bin = "./tmp/main"
-cmd = "go build -o ./tmp/main ."
-post_cmd = [] 
+cmd = "templ generate -notify-proxy && go build -o ./tmp/main ."
+post_cmd = [""] 
 pre_cmd = []
 delay = 0
 include_dir = []
@@ -42,9 +42,9 @@ time = true
 clean_on_exit = true
 
 [proxy]
-app_port = 8080
+# app_port = 8080
 enabled = true
-proxy_port = 3000
+# proxy_port = 3000
 
 [screen]
 keep_scroll = true
