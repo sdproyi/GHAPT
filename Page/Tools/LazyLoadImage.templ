@@ -25,7 +25,7 @@ type Image struct {
 templ LazyLoadImage(img Image) {
 	if IsImageFormatValid(img.Src) {
 		<picture>
-			<source type="image/webp" media="" srcset={ "./static/images/assets/context/webp/" + imageFile(img.Src) + ".webp" } />
+			<source type="image/webp" media="" srcset={ "./static/images/assets/context/webp/" + imageFile(img.Src) + ".webp" }/>
 			<img src={ img.Src } alt={ imageName(img.Src) } loading="lazy"/>
 		</picture>
 	} else {
@@ -73,7 +73,6 @@ func ConvertAllImages() {
 
 func OptimizeImages() {
 	dirPath := "./static/images/assets"
-	// Output directories
 	webpOutputDir := "./static/images/assets/context/webp"
 	jpegOutputDir := "./static/images/assets/context/jpg"
 
@@ -104,7 +103,6 @@ func compareImages(path1, path2 string) bool {
 	}
 	defer file2.Close()
 
-	// Read entire files
 	data1, err1 := io.ReadAll(file1)
 	data2, err2 := io.ReadAll(file2)
 
@@ -243,7 +241,6 @@ func saveAsWebP(path string, img image.Image) error {
 	}
 	defer outputFile.Close()
 
-	// Encode as WebP (lossless)
 	err = webp.Encode(outputFile, img, &webp.Options{Lossless: true})
 	if err != nil {
 		return fmt.Errorf("error encoding WebP: %v", err)
