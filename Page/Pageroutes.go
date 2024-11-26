@@ -10,9 +10,9 @@ type State struct {
 	Open bool
 }
 
-func Routes() {
+func PageRoutes() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		templ.Handler(Index()).ServeHTTP(w, r)
+		templ.Handler(IndexPage()).ServeHTTP(w, r)
 	})
 
 	http.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {

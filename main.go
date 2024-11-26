@@ -32,8 +32,7 @@ func getPort() string {
 }
 
 func main() {
-	// Setup routes and static file serving
-	Routes()
+	PageRoutes()
 	serveStaticFiles("html")
 	serveStaticFiles("font")
 	serveStaticFiles("style")
