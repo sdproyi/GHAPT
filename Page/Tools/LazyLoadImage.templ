@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/chai2010/webp"
+	toml "github.com/pelletier/go-toml/v2"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -17,23 +18,37 @@ import (
 	"sync"
 )
 
-type Image struct {
-	Src   string
-	Error string
+type MyConfig struct {
+	Title string `toml:"title"`
 }
 
-templ LazyLoadImage(img Image) {
-	if IsImageFormatValid(img.Src) {
+func TestToml() {
+	file, err := os.Open("config/Settings.toml")
+	if err != nil {
+		log.Fatalf("Error opening file: %v", err)
+	}
+	defer file.Close()
+
+	var settings MyConfig
+	if err := toml.NewDecoder(file).Decode(&settings); err != nil {
+		log.Fatalf("Error decoding TOML: %v", err)
+	}
+
+	fmt.Println(settings.Title)
+}
+
+templ OptimizeImage(img string) {
+	if isImageFormatValid(img) {
 		<picture>
-			<source type="image/webp" media="" srcset={ "./static/images/assets/context/webp/" + imageFile(img.Src) + ".webp" }/>
-			<img src={ img.Src } alt={ imageName(img.Src) } loading="lazy"/>
+			<source type="image/webp" media="" srcset={ "/config/context/images/webp/" + fileName(img) + ".webp" }/>
+			<img src={ img } alt={ createImageName(img) } loading="lazy"/>
 		</picture>
 	} else {
 		<p>Add a valid image path</p>
 	}
 }
 
-func imageName(imageSource string) string {
+func createImageName(imageSource string) string {
 	s := imageSource
 	lastSlash := strings.LastIndex(s, "/")
 	if lastSlash != -1 {
@@ -46,7 +61,7 @@ func imageName(imageSource string) string {
 	return s
 }
 
-func imageFile(imageSource string) string {
+func fileName(imageSource string) string {
 	s := imageSource
 	lastSlash := strings.LastIndex(s, "/")
 	if lastSlash != -1 {
@@ -55,7 +70,7 @@ func imageFile(imageSource string) string {
 	return s
 }
 
-func IsImageFormatValid(src string) bool {
+func isImageFormatValid(src string) bool {
 	if len(src) != 0 {
 		validImageFormats := []string{".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp", ".tiff"}
 		for _, ext := range validImageFormats {
@@ -123,17 +138,13 @@ func processImages(dirPath, webpOutputDir, jpegOutputDir string) error {
 		if err != nil {
 			return err
 		}
-
-		// Skip directories
 		if d.IsDir() {
-			// Prevent walking into context subdirectories
 			if strings.Contains(path, "/context/") {
 				return filepath.SkipDir
 			}
 			return nil
 		}
 
-		// Check if path is directly under assets
 		relPath, err := filepath.Rel(dirPath, path)
 		if err != nil || strings.Contains(relPath, string(filepath.Separator)) {
 			return nil
