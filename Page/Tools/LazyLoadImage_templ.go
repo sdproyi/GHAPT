@@ -26,25 +26,6 @@ import (
 	"sync"
 )
 
-type MyConfig struct {
-	Title string `toml:"title"`
-}
-
-func TestToml() {
-	file, err := os.Open("config/Settings.toml")
-	if err != nil {
-		log.Fatalf("Error opening file: %v", err)
-	}
-	defer file.Close()
-
-	var settings MyConfig
-	if err := toml.NewDecoder(file).Decode(&settings); err != nil {
-		log.Fatalf("Error decoding TOML: %v", err)
-	}
-
-	fmt.Println(settings.Title)
-}
-
 func OptimizeImage(img string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -74,7 +55,7 @@ func OptimizeImage(img string) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/config/context/images/webp/" + fileName(img) + ".webp")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 43, Col: 103}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 24, Col: 103}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -87,7 +68,7 @@ func OptimizeImage(img string) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(img)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 44, Col: 17}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 25, Col: 17}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -100,7 +81,7 @@ func OptimizeImage(img string) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(createImageName(img))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 44, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 25, Col: 46}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -118,6 +99,24 @@ func OptimizeImage(img string) templ.Component {
 		}
 		return templ_7745c5c3_Err
 	})
+}
+
+type Settings struct {
+	Logo        string `toml:"logo"`
+	Title       string `toml:"title"`
+	Description string `toml:"description"`
+}
+
+func LoadSettings() (Settings, error) {
+	var settings Settings
+	data, err := os.ReadFile("config/Settings.toml")
+	if err != nil {
+		return settings, fmt.Errorf("error reading file: %v", err)
+	}
+	if err := toml.Unmarshal(data, &settings); err != nil {
+		return settings, fmt.Errorf("error decoding TOML: %v", err)
+	}
+	return settings, nil
 }
 
 func createImageName(imageSource string) string {

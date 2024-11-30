@@ -18,25 +18,6 @@ import (
 	"sync"
 )
 
-type MyConfig struct {
-	Title string `toml:"title"`
-}
-
-func TestToml() {
-	file, err := os.Open("config/Settings.toml")
-	if err != nil {
-		log.Fatalf("Error opening file: %v", err)
-	}
-	defer file.Close()
-
-	var settings MyConfig
-	if err := toml.NewDecoder(file).Decode(&settings); err != nil {
-		log.Fatalf("Error decoding TOML: %v", err)
-	}
-
-	fmt.Println(settings.Title)
-}
-
 templ OptimizeImage(img string) {
 	if isImageFormatValid(img) {
 		<picture>
@@ -46,6 +27,24 @@ templ OptimizeImage(img string) {
 	} else {
 		<p>Add a valid image path</p>
 	}
+}
+
+type Settings struct {
+	Logo        string `toml:"logo"`
+	Title       string `toml:"title"`
+	Description string `toml:"description"`
+}
+
+func LoadSettings() (Settings, error) {
+	var settings Settings
+	data, err := os.ReadFile("config/Settings.toml")
+	if err != nil {
+		return settings, fmt.Errorf("error reading file: %v", err)
+	}
+	if err := toml.Unmarshal(data, &settings); err != nil {
+		return settings, fmt.Errorf("error decoding TOML: %v", err)
+	}
+	return settings, nil
 }
 
 func createImageName(imageSource string) string {

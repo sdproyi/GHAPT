@@ -14,8 +14,8 @@ const (
 	staticFilesURLPrefix = "/static/"
 	configFilesRoot      = "./config"
 	configFilesURLPrefix = "/config/"
-	portEnv             = "PORT"
-	defaultPort         = "8080"
+	portEnv              = "PORT"
+	defaultPort          = "8080"
 )
 
 func registerStaticFileHandler(rootDirectory, urlPrefix, folder string) {
@@ -48,7 +48,7 @@ func main() {
 	fmt.Printf("Listening on %s\n", port)
 
 	go tools.OptimizeImages()
-	go tools.TestToml()
+	go tools.LoadSettings()
 
 	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
