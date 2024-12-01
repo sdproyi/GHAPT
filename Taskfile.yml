@@ -18,7 +18,7 @@ tasks:
 
   dev:
     desc: Run development environment (templ and air concurrently)
-    deps: [templ, air]
+    deps: [air, templ]
 
   kill:
     desc: Kill processes on ports 8080 and 7331 (Linux only)
