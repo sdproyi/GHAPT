@@ -3,6 +3,7 @@ package tools
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	toml "github.com/pelletier/go-toml/v2"
 )
@@ -17,14 +18,25 @@ type Config struct {
 	Page Page `toml:"page"`
 }
 
-func LoadPageSettings() (Page, error) {
-	var config Config
-	data, err := os.ReadFile("config/Settings.toml")
-	if err != nil {
-		return Page{}, fmt.Errorf("error reading file: %v", err)
-	}
-	if err := toml.Unmarshal(data, &config); err != nil {
-		return Page{}, fmt.Errorf("error decoding TOML: %v", err)
-	}
-	return config.Page, nil
+var (
+	pageSettings Page
+	settingsOnce sync.Once
+)
+
+func PageSettings() Page {
+	settingsOnce.Do(func() {
+		data, err := os.ReadFile("config/Settings.toml")
+		if err != nil {
+			fmt.Printf("Error reading file: %v\n", err)
+			return
+		}
+		var config Config
+		if err := toml.Unmarshal(data, &config); err != nil {
+			fmt.Printf("Error decoding TOML: %v\n", err)
+			return
+		}
+
+		pageSettings = config.Page
+	})
+	return pageSettings
 }

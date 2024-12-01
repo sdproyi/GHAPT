@@ -1,7 +1,7 @@
 [Page]
 logo = "/static/images/logo.svg"
 title = "YourTitle"
-description = "YourDescription"
+description = "Your Description"
 
 [optimizedFiles]
 imageInputDir = "static/images/assets"

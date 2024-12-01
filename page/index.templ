@@ -17,27 +17,31 @@ templ Head() {
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<link href="/static/images/logo.svg" rel="icon"/>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<script src="/static/html/htmx.min.js" defer></script>
-		<title>YourTitle</title>
+		<title>{ PageSettings().Title }</title>
+		<meta name="description" content={ PageSettings().Description }/>
+		<link href={ PageSettings().Logo } rel="icon"/>
 	</head>
 }
 
 templ Body() {
 	<div class="px-2 text-2xl grow sm:text-3xl md:text-4xl">
-		<div class="relative flex flex-col items-center justify-between h-full font-bold text-center snap-center">
-			<div class="flex flex-col items-center justify-center flex-grow pt-16 pb-16 ">
-				<h1>hello world</h1>
-				@OptimizeImage(Img{
-					Src:   "/static/images/assets/1396690.png",
-					Class: "",
-				})
-			</div>
-		</div>
+		<h1>hello world</h1>
+		@OptimizeImage(Img{
+			Src: "/static/images/assets/1396690.png",
+		})
 	</div>
 }
 
 templ Header() {
-	<header hx-boost="true"></header>
+	<header hx-boost="true" hx-target="body" hx-swap="outerHTML">
+		<nav>
+			<ul>
+				<li><a href="/" hx-push-url="true">Home</a></li>
+				<li><a href="/about" hx-push-url="true">About</a></li>
+				<li><a href="/contact" hx-push-url="true">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
 }

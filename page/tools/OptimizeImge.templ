@@ -19,14 +19,38 @@ import (
 
 type Img struct {
 	Src   string
+	Alt   string
 	Class string
 }
 
 templ OptimizeImage(img Img) {
 	if isImageFormatValid(img.Src) {
 		<picture>
-			<source type="image/webp" media="" srcset={ "build/static/images/webp/" + fileName(img.Src) + ".webp" }/>
-			<img src={ img.Src } alt={ createImageName(img.Src) } class={ img.Class } loading="lazy"/>
+			<source
+				type="image/webp"
+				media=""
+				if ( len(img.Class) != 0) {
+					class={ img.Class }
+				}
+				if ( len(img.Alt) != 0) {
+					alt={ img.Alt }
+				} else {
+					alt={ createImageName(img.Src) }
+				}
+				srcset={ "build/static/images/webp/" + fileName(img.Src) + ".webp" }
+			/>
+			<img
+				src={ img.Src }
+				if ( len(img.Alt) != 0) {
+					alt={ img.Alt }
+				} else {
+					alt={ createImageName(img.Src) }
+				}
+				if ( len(img.Class) != 0) {
+					class={ img.Class }
+				}
+				loading="lazy"
+			/>
 		</picture>
 	} else {
 		<p>Add a valid image path</p>
