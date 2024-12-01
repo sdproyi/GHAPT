@@ -11,3 +11,4 @@ build/tmp/
 *_templ.go
 #^^^^^^^^^ useless? 
 build/bin 
+page/index_templ.go
