@@ -8,3 +8,4 @@ build/tmp/
 *.jpg
 *.png
 *_templ.txt
+build/bin
