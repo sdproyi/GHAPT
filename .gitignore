@@ -8,5 +8,5 @@ build/tmp/
 *.jpg
 *.png
 *_templ.txt
-*.go
+*_templ.go
 build/bin
