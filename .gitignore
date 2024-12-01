@@ -10,3 +10,4 @@ build/tmp/
 *_templ.txt
 build/bin
 *_templ.go
+page/*_templ.go
