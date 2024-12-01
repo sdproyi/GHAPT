@@ -9,4 +9,5 @@ build/tmp/
 *.png
 *_templ.txt
 *_templ.go
-build/bin
+#^^^^^^^^^ useless? 
+build/bin 
