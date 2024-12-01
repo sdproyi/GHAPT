@@ -9,4 +9,4 @@ build/tmp/
 *.png
 *_templ.txt
 build/bin
-_templ.go
+*_templ.go
