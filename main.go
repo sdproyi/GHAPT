@@ -1,9 +1,7 @@
 package main
 
 import (
-	page "app/Page"
-	tools "app/Page/Tools"
-	"fmt"
+	page "app/page"
 	"log"
 	"net/http"
 	"os"
@@ -18,6 +16,15 @@ const (
 	defaultPort          = "8080"
 )
 
+func main() {
+	page.PageRoutes()
+	port := getServerPort()
+	hostStaticFiles()
+	if err := http.ListenAndServe(port, nil); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
+}
+
 func registerStaticFileHandler(rootDirectory, urlPrefix, folder string) {
 	path := urlPrefix + folder + "/"
 	fileServer := http.FileServer(http.Dir(rootDirectory + "/" + folder))
@@ -31,9 +38,7 @@ func getServerPort() string {
 	return ":" + defaultPort
 }
 
-func main() {
-	page.PageRoutes()
-
+func hostStaticFiles() {
 	staticAssetFolders := []string{"html", "font", "style", "images/assets"}
 	for _, folder := range staticAssetFolders {
 		registerStaticFileHandler(staticFilesRoot, staticFilesURLPrefix, folder)
@@ -42,20 +47,5 @@ func main() {
 	configAssetFolders := []string{"static/images/webp", "static/images/jpg", "static/images/minified"}
 	for _, folder := range configAssetFolders {
 		registerStaticFileHandler(configFilesRoot, configFilesURLPrefix, folder)
-	}
-
-	port := getServerPort()
-	fmt.Printf("Listening on %s\n", port)
-
-	tools.OptimizeImages()
-	settings, err := tools.LoadPageSettings()
-	if err != nil {
-		log.Printf("Error loading settings: %v", err)
-	} else {
-		fmt.Printf("Loaded settings: %+v\n", settings)
-	}
-
-	if err := http.ListenAndServe(port, nil); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
 	}
 }

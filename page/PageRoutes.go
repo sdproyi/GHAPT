@@ -15,7 +15,4 @@ func PageRoutes() {
 		templ.Handler(IndexPage()).ServeHTTP(w, r)
 	})
 
-	http.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		templ.Handler(ErrorPage()).ServeHTTP(w, r)
-	})
 }
