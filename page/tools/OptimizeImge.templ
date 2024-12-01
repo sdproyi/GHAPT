@@ -17,11 +17,16 @@ import (
 	"sync"
 )
 
-templ OptimizeImage(img string) {
-	if isImageFormatValid(img) {
+type Img struct {
+	Src   string
+	Class string
+}
+
+templ OptimizeImage(img Img) {
+	if isImageFormatValid(img.Src) {
 		<picture>
-			<source type="image/webp" media="" srcset={ "build/static/images/webp/" + fileName(img) + ".webp" }/>
-			<img src={ img } alt={ createImageName(img) } loading="lazy"/>
+			<source type="image/webp" media="" srcset={ "build/static/images/webp/" + fileName(img.Src) + ".webp" }/>
+			<img src={ img.Src } alt={ createImageName(img.Src) } class={ img.Class } loading="lazy"/>
 		</picture>
 	} else {
 		<p>Add a valid image path</p>

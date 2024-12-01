@@ -29,7 +29,10 @@ templ Body() {
 		<div class="relative flex flex-col items-center justify-between h-full font-bold text-center snap-center">
 			<div class="flex flex-col items-center justify-center flex-grow pt-16 pb-16 ">
 				<h1>hello world</h1>
-				@OptimizeImage("/static/images/assets/1396690.png")
+				@OptimizeImage(Img{
+					Src:   "/static/images/assets/1396690.png",
+					Class: "",
+				})
 			</div>
 		</div>
 	</div>
