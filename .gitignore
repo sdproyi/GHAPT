@@ -8,8 +8,5 @@ build/tmp/
 *.jpg
 *.png
 *_templ.txt
+*.go
 build/bin
-*_templ.go
-page/*_templ.go
-page/index_templ.go
-page/tools/OptimizeImge_templ.go
