@@ -1,0 +1,36 @@
+version: '3'
+
+tasks:
+  templ:
+    desc: Generate templ files and watch for changes
+    cmds:
+      - templ generate --watch --proxy="http://localhost:8080"
+
+  tailwind:
+    desc: Watch and compile Tailwind CSS
+    cmds:
+      - tailwindcss -i ./tailwind.css -o ./static/style/styles.css --watch --silent
+
+  air:
+    desc: Run the application with air for hot reloading
+    cmds:
+      - air -c config/.air.toml
+
+  dev:
+    desc: Run development environment (templ and air concurrently)
+    deps: [templ, air]
+
+  kill:
+    desc: Kill processes on ports 8080 and 7331 (Linux only)
+    cmds:
+      - fuser -k 8080/tcp && fuser -k 7331/tcp
+
+  compile:
+    desc: Compile the CSS and build the Go application
+    cmds:
+      - tailwindcss -i ./tailwind.css -o ./static/style/styles.css
+      - go build -o app .
+
+  build:
+    desc: Build the application
+    deps: [compile]

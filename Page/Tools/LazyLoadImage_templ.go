@@ -47,20 +47,20 @@ func OptimizeImage(img string) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		if isImageFormatValid(img) {
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<picture><source type=\"image/webp\" media=\"\" srcset=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 string
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/config/context/images/webp/" + fileName(img) + ".webp")
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("build/static/images/webp/" + fileName(img) + ".webp")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 23, Col: 103}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Page/Tools/LazyLoadImage.templ`, Line: 23, Col: 100}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 2)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <img src=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -73,7 +73,7 @@ func OptimizeImage(img string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 3)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" alt=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -86,12 +86,12 @@ func OptimizeImage(img string) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 4)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" loading=\"lazy\"></picture>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 5)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<p>Add a valid image path</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -139,9 +139,9 @@ func ConvertAllImages() {
 }
 
 func OptimizeImages() {
-	dirPath := "./static/images/assets"
-	webpOutputDir := "./static/images/assets/context/webp"
-	jpegOutputDir := "./static/images/assets/context/jpg"
+	dirPath := "static/images/assets"
+	webpOutputDir := "build/static/images/webp"
+	jpegOutputDir := "build/static/images/jpg"
 
 	createDir(webpOutputDir)
 	createDir(jpegOutputDir)

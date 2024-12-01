@@ -20,7 +20,7 @@ import (
 templ OptimizeImage(img string) {
 	if isImageFormatValid(img) {
 		<picture>
-			<source type="image/webp" media="" srcset={ "/config/context/images/webp/" + fileName(img) + ".webp" }/>
+			<source type="image/webp" media="" srcset={ "build/static/images/webp/" + fileName(img) + ".webp" }/>
 			<img src={ img } alt={ createImageName(img) } loading="lazy"/>
 		</picture>
 	} else {
@@ -67,9 +67,9 @@ func ConvertAllImages() {
 }
 
 func OptimizeImages() {
-	dirPath := "./static/images/assets"
-	webpOutputDir := "./static/images/assets/context/webp"
-	jpegOutputDir := "./static/images/assets/context/jpg"
+	dirPath := "static/images/assets"
+	webpOutputDir := "build/static/images/webp"
+	jpegOutputDir := "build/static/images/jpg"
 
 	createDir(webpOutputDir)
 	createDir(jpegOutputDir)

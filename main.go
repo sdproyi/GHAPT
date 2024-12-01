@@ -12,8 +12,8 @@ import (
 const (
 	staticFilesRoot      = "./static"
 	staticFilesURLPrefix = "/static/"
-	configFilesRoot      = "./config"
-	configFilesURLPrefix = "/config/"
+	configFilesRoot      = "./build"
+	configFilesURLPrefix = "/build/"
 	portEnv              = "PORT"
 	defaultPort          = "8080"
 )
@@ -39,7 +39,7 @@ func main() {
 		registerStaticFileHandler(staticFilesRoot, staticFilesURLPrefix, folder)
 	}
 
-	configAssetFolders := []string{"context/images/webp", "context/images/jpg", "context/images/minified"}
+	configAssetFolders := []string{"static/images/webp", "static/images/jpg", "static/images/minified"}
 	for _, folder := range configAssetFolders {
 		registerStaticFileHandler(configFilesRoot, configFilesURLPrefix, folder)
 	}
@@ -47,9 +47,8 @@ func main() {
 	port := getServerPort()
 	fmt.Printf("Listening on %s\n", port)
 
-
 	tools.OptimizeImages()
-	settings, err := tools.LoadSettings()
+	settings, err := tools.LoadPageSettings()
 	if err != nil {
 		log.Printf("Error loading settings: %v", err)
 	} else {
