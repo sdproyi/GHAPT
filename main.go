@@ -47,8 +47,14 @@ func main() {
 	port := getServerPort()
 	fmt.Printf("Listening on %s\n", port)
 
-	go tools.OptimizeImages()
-	go tools.LoadSettings()
+
+	tools.OptimizeImages()
+	settings, err := tools.LoadSettings()
+	if err != nil {
+		log.Printf("Error loading settings: %v", err)
+	} else {
+		fmt.Printf("Loaded settings: %+v\n", settings)
+	}
 
 	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatalf("Failed to start server: %v", err)

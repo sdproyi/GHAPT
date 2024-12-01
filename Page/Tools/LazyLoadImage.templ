@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/chai2010/webp"
-	toml "github.com/pelletier/go-toml/v2"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -27,24 +26,6 @@ templ OptimizeImage(img string) {
 	} else {
 		<p>Add a valid image path</p>
 	}
-}
-
-type Settings struct {
-	Logo        string `toml:"logo"`
-	Title       string `toml:"title"`
-	Description string `toml:"description"`
-}
-
-func LoadSettings() (Settings, error) {
-	var settings Settings
-	data, err := os.ReadFile("config/Settings.toml")
-	if err != nil {
-		return settings, fmt.Errorf("error reading file: %v", err)
-	}
-	if err := toml.Unmarshal(data, &settings); err != nil {
-		return settings, fmt.Errorf("error decoding TOML: %v", err)
-	}
-	return settings, nil
 }
 
 func createImageName(imageSource string) string {
