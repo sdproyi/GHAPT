@@ -1,7 +1,7 @@
 node_modules
 tmp/build-errors.log
-bin/task
-build/tmp
+bin/task/
+build/tmp/
 .env
 *.webp
 *.jpeg
