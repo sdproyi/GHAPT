@@ -2,7 +2,7 @@ node_modules
 tmp/build-errors.log
 bin/task/
 build/tmp/
-.env
+*.env
 *.webp
 *.jpeg
 *.jpg
@@ -10,5 +10,5 @@ build/tmp/
 *_templ.txt
 *_templ.go
 #^^^^^^^^^ useless? 
-build/bin 
-page/index_templ.go
+build/bin
+config/.env
